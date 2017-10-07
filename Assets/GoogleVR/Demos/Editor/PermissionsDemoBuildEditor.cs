@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissioßns and
 // limitations under the License.
 
-// Only invoke custom build processor when building for Android.
-#if UNITY_ANDROID
+// This script only works in Unity 5.6 or newer since older versions of Unity
+// don't have IPreprocessBuild and IPostprocessBuild.
+#if UNITY_5_6_OR_NEWER && UNITY_ANDROID
 using System;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEngine;
 using UnityEditorInternal.VR;
 
-class PermissionsDemoBuildProcessor : IPreprocessBuild, IPostprocessBuild
+class MyCustomBuildProcessor : IPreprocessBuild, IPostprocessBuild
 {
     private const string SCENE_NAME_PERMISSIONS_DEMO = "PermissionsDemo";
     private const string VR_DEVICE_CARDBOARD = "cardboard";
@@ -33,12 +34,12 @@ class PermissionsDemoBuildProcessor : IPreprocessBuild, IPostprocessBuild
         get { return 0; }
     }
 
-    // OnPreprocessBuild() is called right before the build process begins. If it
+    // OnPreprocessBuild() is called rigth before the build process begins. If it
     // detects that the first enabled scene in the build arrays is the PermissionsDemo,
     // and Daydream is in the VR SDKs, it will add Cardboard to the VR SDKs. Because
     // the PermissionsDemo needs a perm statement in the Manifest while other demos don't.
     // Adding Cardboard to VR SDKs will merge in the Manifest-Cardboard which has perm
-    // statement in it.
+    // statemetn in it.
     public void OnPreprocessBuild(BuildTarget target, string path)
     {
         m_cardboardAddedFromCode = false;
@@ -113,7 +114,7 @@ class PermissionsDemoBuildProcessor : IPreprocessBuild, IPostprocessBuild
 
         string[] androidVrSDKs = VREditor.GetVREnabledDevicesOnTargetGroup(BuildTargetGroup.Android);
 
-        // The enabled devices are modified somehow, which shouldn't happen. Abort the post build process.
+        // The enabled devices are modified somehow, which shoudln't happen. Abort the post build process.
         if (androidVrSDKs.Length == 0 || androidVrSDKs[androidVrSDKs.Length - 1] != VR_DEVICE_CARDBOARD)
         {
             return;
@@ -135,4 +136,4 @@ class PermissionsDemoBuildProcessor : IPreprocessBuild, IPostprocessBuild
         m_cardboardAddedFromCode = false;
     }
 }
-#endif  // UNITY_ANDROID
+#endif  // UNITY_5_6_OR_NEWER && UNITY_ANDROID

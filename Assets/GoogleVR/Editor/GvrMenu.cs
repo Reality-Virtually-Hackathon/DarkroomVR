@@ -15,7 +15,7 @@
 using UnityEngine;
 using UnityEditor;
 
-public class GvrEditorMenu {
+public class GvrMenu {
   [MenuItem("GoogleVR/Documentation/Developers Site", false, 100)]
   private static void OpenDocumentation() {
     Application.OpenURL("https://developers.google.com/vr");
@@ -46,4 +46,13 @@ public class GvrEditorMenu {
     Application.OpenURL("https://github.com/googlesamples/cardboard-unity/issues");
   }
 
+  [MenuItem("GoogleVR/About Google VR", false, 200)]
+  private static void OpenAbout() {
+    EditorUtility.DisplayDialog("Google VR SDK for Unity",
+        "Version: " + GvrUnitySdkVersion.GVR_SDK_VERSION + "\n\n"
+        + "Licenses: Apache 2.0, MIT\n"
+        + "Copyright: ©2017 Google Inc. All rights reserved.\n"
+        + "See LICENSE for additional license information.",
+        "OK");
+  }
 }
