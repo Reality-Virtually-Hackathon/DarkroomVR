@@ -18,20 +18,19 @@ using UnityEngine.EventSystems;
 /// Draws a circular reticle in front of any object that the user points at.
 /// The circle dilates if the object is clickable.
 public class GvrReticlePointer : GvrBasePointer {
-  /// The constants below are expsed for testing. Minimum inner angle of the reticle (in degrees).
+  // The constants below are expsed for testing.
+  // Minimum inner angle of the reticle (in degrees).
   public const float RETICLE_MIN_INNER_ANGLE = 0.0f;
-
-  /// Minimum outer angle of the reticle (in degrees).
+  // Minimum outer angle of the reticle (in degrees).
   public const float RETICLE_MIN_OUTER_ANGLE = 0.5f;
-
-  /// Angle at which to expand the reticle when intersecting with an object (in degrees).
+  // Angle at which to expand the reticle when intersecting with an object
+  // (in degrees).
   public const float RETICLE_GROWTH_ANGLE = 1.5f;
 
-  /// Minimum distance of the reticle (in meters).
+  // Minimum distance of the reticle (in meters).
   public const float RETICLE_DISTANCE_MIN = 0.45f;
-
-  /// Maximum distance of the reticle (in meters).
-  public float maxReticleDistance = 10.0f;
+  // Maximum distance of the reticle (in meters).
+  public const float RETICLE_DISTANCE_MAX = 10.0f;
 
   /// Number of segments making the reticle circle.
   public int reticleSegments = 20;
@@ -65,7 +64,7 @@ public class GvrReticlePointer : GvrBasePointer {
 
   public float ReticleOuterDiameter { get; private set; }
 
-  public override float MaxPointerDistance { get { return maxReticleDistance; } }
+  public override float MaxPointerDistance { get { return RETICLE_DISTANCE_MAX; } }
 
   public override void OnPointerEnter(RaycastResult raycastResultResult, bool isInteractive) {
     SetPointerTarget(raycastResultResult.worldPosition, isInteractive);
@@ -76,7 +75,7 @@ public class GvrReticlePointer : GvrBasePointer {
   }
 
   public override void OnPointerExit(GameObject previousObject) {
-    ReticleDistanceInMeters = maxReticleDistance;
+    ReticleDistanceInMeters = RETICLE_DISTANCE_MAX;
     ReticleInnerAngle = RETICLE_MIN_INNER_ANGLE;
     ReticleOuterAngle = RETICLE_MIN_OUTER_ANGLE;
   }
@@ -95,7 +94,7 @@ public class GvrReticlePointer : GvrBasePointer {
 
   public void UpdateDiameters() {
     ReticleDistanceInMeters =
-      Mathf.Clamp(ReticleDistanceInMeters, RETICLE_DISTANCE_MIN, maxReticleDistance);
+      Mathf.Clamp(ReticleDistanceInMeters, RETICLE_DISTANCE_MIN, RETICLE_DISTANCE_MAX);
 
     if (ReticleInnerAngle < RETICLE_MIN_INNER_ANGLE) {
       ReticleInnerAngle = RETICLE_MIN_INNER_ANGLE;
@@ -150,7 +149,7 @@ public class GvrReticlePointer : GvrBasePointer {
     Vector3 targetLocalPosition = base.PointerTransform.InverseTransformPoint(target);
 
     ReticleDistanceInMeters =
-      Mathf.Clamp(targetLocalPosition.z, RETICLE_DISTANCE_MIN, maxReticleDistance);
+      Mathf.Clamp(targetLocalPosition.z, RETICLE_DISTANCE_MIN, RETICLE_DISTANCE_MAX);
     if (interactive) {
       ReticleInnerAngle = RETICLE_MIN_INNER_ANGLE + RETICLE_GROWTH_ANGLE;
       ReticleOuterAngle = RETICLE_MIN_OUTER_ANGLE + RETICLE_GROWTH_ANGLE;

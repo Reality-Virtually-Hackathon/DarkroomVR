@@ -30,13 +30,12 @@ public class GvrLaserPointer : GvrBasePointer {
   [Tooltip("Distance from the pointer that the reticle will be drawn at when hitting nothing.")]
   public float defaultReticleDistance = 20.0f;
 
-  [Tooltip("By default, the length of the laser is used as the CameraRayIntersectionDistance. " +
-    "Set this field to a non-zero value to override it.")]
-  public float overrideCameraRayIntersectionDistance;
-
   /// The percentage of the reticle mesh that shows the reticle.
   /// The rest of the reticle mesh is transparent.
   private const float RETICLE_VISUAL_RATIO = 0.1f;
+
+  /// Multiplier applied to the length of the laser to determine the CameraRayIntersectionDistance.
+  private const float CAMERA_RAY_INTERSECTION_COEFF = 1.5f;
 
   public GvrLaserVisual LaserVisual { get; private set; }
 
@@ -50,12 +49,8 @@ public class GvrLaserPointer : GvrBasePointer {
 
   public override float CameraRayIntersectionDistance {
     get {
-      if (overrideCameraRayIntersectionDistance != 0.0f) {
-        return overrideCameraRayIntersectionDistance;
-      }
-
       return LaserVisual != null ?
-        LaserVisual.maxLaserDistance : overrideCameraRayIntersectionDistance;
+        LaserVisual.maxLaserDistance * CAMERA_RAY_INTERSECTION_COEFF : 0.0f;
     }
   }
 
@@ -84,18 +79,18 @@ public class GvrLaserPointer : GvrBasePointer {
   }
 
   public override void GetPointerRadius(out float enterRadius, out float exitRadius) {
-    if (LaserVisual.reticle != null) {
-      float reticleScale = LaserVisual.reticle.transform.localScale.x;
+    if (LaserVisual.Reticle != null) {
+      float reticleScale = LaserVisual.Reticle.transform.localScale.x;
 
       // Fixed size for enter radius to avoid flickering.
       // This will cause some slight variability based on the distance of the object
       // from the camera, and is optimized for the average case.
-      enterRadius = LaserVisual.reticle.sizeMeters * 0.5f * RETICLE_VISUAL_RATIO;
+      enterRadius = GvrLaserVisual.RETICLE_SIZE_METERS * 0.5f * RETICLE_VISUAL_RATIO;
 
       // Dynamic size for exit radius.
       // Always correct because we know the intersection point of the object and can
       // therefore use the correct radius based on the object's distance from the camera.
-      exitRadius = reticleScale * LaserVisual.reticle.ReticleMeshSizeMeters * RETICLE_VISUAL_RATIO;
+      exitRadius = reticleScale * LaserVisual.ReticleMeshSizeMeters * RETICLE_VISUAL_RATIO;
     } else {
       enterRadius = 0.0f;
       exitRadius = 0.0f;
