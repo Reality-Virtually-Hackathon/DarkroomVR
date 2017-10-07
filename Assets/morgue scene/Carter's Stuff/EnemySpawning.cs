@@ -9,6 +9,7 @@ public class EnemySpawning : MonoBehaviour {
     Mesh planeMesh;
     Bounds bounds;
     Vector3 randomPointOnPlane;
+    public float startTime = 0;
     public float spawnTime = 4;
 
 
@@ -20,8 +21,10 @@ public class EnemySpawning : MonoBehaviour {
         bounds = planeMesh.bounds;
         enemy.transform.position = new Vector3(10,10,10);
         Spawn ();
-        Invoke("Spawn", spawnTime);
+        InvokeRepeating("Spawn", startTime, spawnTime);
 	}
+
+       
 
 
 
@@ -29,8 +32,7 @@ public class EnemySpawning : MonoBehaviour {
     void Spawn () {
         float randomX = Random.Range(floor.transform.position.x - (floor.transform.localScale.x / 2) * bounds.size.x, 
                                      floor.transform.position.x + (floor.transform.localScale.x / 2) * bounds.size.x);
-        float randomY = Random.Range(floor.transform.position.y - (floor.transform.localScale.y / 2) * bounds.size.y,
-                                     floor.transform.position.y + (floor.transform.localScale.y / 2) * bounds.size.y);
+        float randomY = Random.Range(floor.transform.position.y, floor.transform.position.y + 2);
         float randomZ = Random.Range(floor.transform.position.z - (floor.transform.localScale.z / 2) * bounds.size.z,
 									 floor.transform.position.z + (floor.transform.localScale.z / 2) * bounds.size.z);
         randomPointOnPlane =  new Vector3(randomX, randomY, randomZ);
