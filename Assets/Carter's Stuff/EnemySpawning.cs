@@ -12,8 +12,7 @@ public class EnemySpawning : MonoBehaviour {
 
 
 
-    void Start(){
-        enemy = GameObject.FindWithTag("Enemy");
+    void Start() {
         floor = GameObject.FindWithTag("Floor");
 		planeMesh = floor.GetComponent<MeshFilter>().mesh;
         bounds = planeMesh.bounds;

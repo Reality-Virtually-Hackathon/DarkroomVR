@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Player : MonoBehaviour {
 
@@ -12,14 +10,12 @@ public class Player : MonoBehaviour {
 
 	void Awake()
 	{
-		maxHealth = currentHealth;
+        currentHealth = maxHealth;
 	}
 
 	public void TakeDamage(int damage)
 	{
-		currentHealth -= damage;
-		Debug.Log("Player takes " + damage + " damage.");
-        Debug.Log("Player has " + currentHealth + " health");
+		currentHealth = currentHealth - damage;
 
 		if (currentHealth <= 0)
 		{

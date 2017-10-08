@@ -1,18 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyCollision : MonoBehaviour {
 
-    Player player = new Player();
-    Enemy enemy = new Enemy();
+    Player player;
 
-    public void OnCollisionEnter(Collision other)
+    void Start()
     {
-        print("Collision occured"); 
-        if (other.gameObject.tag == "Enemy") {
+        player = GameObject.FindWithTag("Player").GetComponent <Player> ();
+
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Enemy" && this.gameObject.tag == "Player") {
             player.TakeDamage(10);
-            enemy.Die();
+            other.gameObject.SetActive(false);
         }
+
     }
 }
